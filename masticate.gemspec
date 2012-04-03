@@ -4,9 +4,10 @@ require File.expand_path('../lib/masticate/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Jason May"]
   gem.email         = ["jmay@pobox.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Data file crunching}
+  gem.summary       = %q{Utility functions for parsing incoming text data files.}
   gem.homepage      = ""
+  gem.rubyforge_project = "masticate"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
@@ -14,4 +15,6 @@ Gem::Specification.new do |gem|
   gem.name          = "masticate"
   gem.require_paths = ["lib"]
   gem.version       = Masticate::VERSION
+
+  gem.add_development_dependency "rspec"
 end
