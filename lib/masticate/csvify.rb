@@ -9,7 +9,11 @@ class Masticate::Csvify
   end
 
   def csvify(opts)
-    CSV.foreach(file, :col_sep => opts[:col_sep]) do |row|
+    csv_options = {}
+    csv_options[:col_sep] = opts[:col_sep] if opts[:col_sep]
+    csv_options[:quote_char] = opts[:quote_char] || opts[:col_sep] if opts[:quote_char] || opts[:col_sep]
+    
+    CSV.foreach(file, csv_options) do |row|
       opts[:output] << row.to_csv
     end
   end
