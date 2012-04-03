@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+require "masticate"
+
+command, filename = ARGV
+
+case ARGV.shift
+when 'sniff'
+  file = File.open(filename)
+  results = Masticate.sniff(file)
+  col_sep = results[:col_sep]
+  col_sep = "TAB" if col_sep == "\t"
+  file.close
+  $stderr.puts <<-EOT
+Processing complete.
+  Input delimiter: #{col_sep}
+  Field counts: #{results[:field_counts].join(',')}
+EOT
+
+when 'mend'
+  file = File.open(filename)
+  metadata = Masticate.sniff(file)
+  file.close
+  file = File.open(filename)
+  Masticate.mend(file, metadata.merge(:output => $stdout))
+
+else
+  raise "unknown command #{command}"
+end
