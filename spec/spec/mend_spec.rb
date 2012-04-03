@@ -3,7 +3,7 @@
 require "spec_helper"
 
 describe "mending" do
-  it "should find tab delimiter" do
+  it "should merge lines when delimiter counts don't match'" do
     filename = File.dirname(__FILE__) + "/../data/broken_psv.txt"
     file = File.open(filename)
     devnull = File.open('/dev/null', 'w')

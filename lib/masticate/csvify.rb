@@ -1,4 +1,5 @@
 # convert input to clean standard CSV
+require "csv"
 
 class Masticate::Csvify
   attr_reader :file
@@ -8,9 +9,8 @@ class Masticate::Csvify
   end
 
   def csvify(opts)
-    output = CSV.open(opts[:output])
     CSV.foreach(file, :col_sep => opts[:col_sep]) do |row|
-      output << row
+      opts[:output] << row.to_csv
     end
   end
 end
