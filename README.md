@@ -18,14 +18,15 @@ Or install it yourself as:
 
 ## Usage
 
-    masticate filename
+    masticate sniff filename
+    masticate mend filename
 
 or
 
     > require 'masticate'
     > f = File.open(filename)
     > Masticate.sniff(f)
-    > Masticate.mend(f)
+    > Masticate.mend(f, :output => $stdout, :col_sep => "\t")
 
 ## Contributing
 

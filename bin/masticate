@@ -25,12 +25,20 @@ when 'mend'
   file.close
   file = File.open(filename)
   results = Masticate.mend(file, metadata.merge(:output => $stdout))
+  file.close
   $stderr.puts <<-EOT
 Processing complete.
   Input delimiter: #{col_sep}
   Lines in input: #{results[:input_records]}
   Lines in output: #{results[:output_records]}
 EOT
+
+when 'csvify'
+  file = File.open(filename)
+  metadata = Masticate.sniff(file)
+  file.close
+  file = File.open(filename)
+  Masticate.csvify(file, metadata.merge(:output => $stdout))
 
 else
   raise "unknown command #{command}"
