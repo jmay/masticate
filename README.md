@@ -1,6 +1,6 @@
 # Masticate
 
-TODO: Write a gem description
+Data file crunching
 
 ## Installation
 
@@ -18,7 +18,14 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    masticate filename
+
+or
+
+    > require 'masticate'
+    > f = File.open(filename)
+    > Masticate.sniff(f)
+    > Masticate.mend(f)
 
 ## Contributing
 

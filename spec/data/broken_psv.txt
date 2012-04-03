@@ -1,0 +1,6 @@
+COL1|COL 2|Col 3   |col-4|   col5  |col6
+data|  data |data  |d a t a|data|data
+data|  data |data  |d a t a|data|data
+data|  data |this long row
+is split across lines|d a t a|data|data
+data|  data |data  |d a t a|data|data
