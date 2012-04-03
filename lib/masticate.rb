@@ -1,5 +1,8 @@
 require "masticate/version"
+require "masticate/sniffer"
 
 module Masticate
-  # Your code goes here...
+  def self.sniff(file)
+    Sniffer.new(file).sniff
+  end
 end
