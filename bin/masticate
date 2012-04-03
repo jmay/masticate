@@ -20,9 +20,17 @@ EOT
 when 'mend'
   file = File.open(filename)
   metadata = Masticate.sniff(file)
+  col_sep = metadata[:col_sep]
+  col_sep = "TAB" if col_sep == "\t"
   file.close
   file = File.open(filename)
-  Masticate.mend(file, metadata.merge(:output => $stdout))
+  results = Masticate.mend(file, metadata.merge(:output => $stdout))
+  $stderr.puts <<-EOT
+Processing complete.
+  Input delimiter: #{col_sep}
+  Lines in input: #{results[:input_records]}
+  Lines in output: #{results[:output_records]}
+EOT
 
 else
   raise "unknown command #{command}"
