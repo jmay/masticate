@@ -1,9 +1,9 @@
 require "open-uri"
 
-require "masticate/version"
-require "masticate/sniffer"
-require "masticate/mender"
-require "masticate/csvify"
+require_relative "masticate/version"
+require_relative "masticate/sniffer"
+require_relative "masticate/mender"
+require_relative "masticate/csvify"
 
 module Masticate
   def self.sniff(filename)

@@ -16,15 +16,4 @@ describe "delimiter sniffing" do
     results[:col_sep].should == '|'
     results[:field_counts].should == {6 => 5}
   end
-
-  # it "should sniff files on the web" do
-  #   uri = "http://www.example.com/somedata.dat"
-  # 
-  #   Masticate::Sniffer.any_instance.stub(:open).and_return(File.dirname(__FILE__) + "/../data/pipe_data.txt")
-  #   Masticate::Sniffer.any_instance.should_receive(:open).with(uri)
-  # 
-  #   results = Masticate.sniff(uri)
-  #   results[:col_sep].should == '|'
-  #   results[:field_counts].should == [6]
-  # end
 end

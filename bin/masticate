@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require "masticate"
+require_relative "../lib/masticate"
 
 command, filename = ARGV
 
@@ -12,7 +12,7 @@ when 'sniff'
   $stderr.puts <<-EOT
 Processing complete.
   Input delimiter: #{col_sep}
-  Field counts: #{results[:field_counts].join(',')}
+  Field counts: #{results[:field_counts].inspect}
 EOT
 
 when 'mend'
