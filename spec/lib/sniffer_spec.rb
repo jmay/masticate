@@ -4,9 +4,9 @@ require "spec_helper"
 
 describe "delimiter sniffing" do
   it "should find tab delimiter" do
-    filename = File.dirname(__FILE__) + "/../data/tabbed_data.txt"
-    file = File.open(filename)
-    results = Masticate.sniff(file)
+    # filename = File.dirname(__FILE__) + "/../data/tabbed_data.txt"
+    # file = File.open(filename)
+    results = Masticate.sniff(filename)
     results[:col_sep].should == "\t"
     results[:field_counts].should == [6]
   end
