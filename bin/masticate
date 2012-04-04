@@ -29,7 +29,13 @@ EOT
 
 when 'csvify'
   metadata = Masticate.sniff(filename)
-  Masticate.csvify(filename, metadata)
+  results = Masticate.csvify(filename, metadata)
+  $stderr.puts <<-EOT
+Processing complete.
+  Input delimiter: #{metadata[:col_sep]}
+  Lines in input: #{results[:input_count]}
+  Lines in output: #{results[:output_count]}
+EOT
 
 else
   raise "unknown command #{command}"

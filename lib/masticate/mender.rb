@@ -11,11 +11,11 @@ class Masticate::Mender
   end
 
   def mend(opts)
-    output = opts[:output] ? File.open(opts[:output], "w") : $stdout
+    @output = opts[:output] ? File.open(opts[:output], "w") : $stdout
     col_sep = opts[:col_sep]
 
     expected_delim_count = nil
-    @input_count = output_count = 0
+    @input_count = @output_count = 0
     while (line = get) do
       unless line =~ /^\s*$/
         if !expected_delim_count
@@ -32,17 +32,16 @@ class Masticate::Mender
           end
         end
         if line.count(col_sep) > 2
-          output_count += 1
-          output.puts line
+          emit(line)
         end
       end
     end
 
     @input.close
-    output.close if opts[:output]
+    @output.close if opts[:output]
     {
       :input_records => @input_count,
-      :output_records => output_count
+      :output_records => @output_count
     }
   end
 
@@ -50,5 +49,15 @@ class Masticate::Mender
     line = input.gets
     @input_count += 1
     line && line.chomp
+  end
+
+  def emit(line)
+    @output_count += 1
+    begin
+      @output.puts line
+    rescue Errno::EPIPE
+      # output was closed, e.g. ran piped into `head`
+      # silently ignore this condition, it's not fatal and doesn't need a warning
+    end
   end
 end
