@@ -1,32 +1,29 @@
 class Masticate::Sniffer
-  attr_reader :file
-  attr_reader :col_sep
+  attr_reader :col_sep, :stats
 
   CandidateDelimiters = [',', '|', "\t"]
 
-  def initialize(file)
-    @file = file
-  end
-
-  def self.sniff(file)
-    sniffer = new(file)
-    sniffer.sniff
+  def initialize(filename)
+    @filename = filename
   end
 
   def sniff
     @col_sep = find_col_sep
+    @stats = stats
     {
-      :col_sep => col_sep,
-      :field_counts => stats
+      :col_sep => @col_sep,
+      :field_counts => @stats,
+      :line1 => @line1
     }
   end
 
   def find_col_sep
-    line1 = file.lines.first
+    input = open(@filename)
+    @line1 = input.lines.first
     delimcounts = CandidateDelimiters.each_with_object({}) do |delim,h|
-      h[delim] = consider_delim(line1, delim)
+      h[delim] = consider_delim(@line1, delim)
     end
-    file.seek(0) # reset file pointer
+    input.close
     delimcounts.sort_by{|h,v| -v}.first.first
   end
 
@@ -35,6 +32,9 @@ class Masticate::Sniffer
   end
 
   def stats
-    file.lines.map {|line| line.split(col_sep).count}.uniq
+    input = open(@filename)
+    counts = input.lines.each_with_object(Hash.new(0)) {|line, counts| counts[line.split(col_sep).count] += 1}
+    input.close
+    counts
   end
 end

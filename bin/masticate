@@ -6,11 +6,9 @@ command, filename = ARGV
 
 case ARGV.shift
 when 'sniff'
-  file = File.open(filename)
-  results = Masticate.sniff(file)
+  results = Masticate.sniff(filename)
   col_sep = results[:col_sep]
   col_sep = "TAB" if col_sep == "\t"
-  file.close
   $stderr.puts <<-EOT
 Processing complete.
   Input delimiter: #{col_sep}
@@ -18,14 +16,10 @@ Processing complete.
 EOT
 
 when 'mend'
-  file = File.open(filename)
-  metadata = Masticate.sniff(file)
+  metadata = Masticate.sniff(filename)
   col_sep = metadata[:col_sep]
   col_sep = "TAB" if col_sep == "\t"
-  file.close
-  file = File.open(filename)
-  results = Masticate.mend(file, metadata.merge(:output => $stdout))
-  file.close
+  results = Masticate.mend(filename, metadata)
   $stderr.puts <<-EOT
 Processing complete.
   Input delimiter: #{col_sep}
@@ -34,11 +28,8 @@ Processing complete.
 EOT
 
 when 'csvify'
-  file = File.open(filename)
-  metadata = Masticate.sniff(file)
-  file.close
-  file = File.open(filename)
-  Masticate.csvify(file, metadata.merge(:output => $stdout))
+  metadata = Masticate.sniff(filename)
+  Masticate.csvify(filename, metadata)
 
 else
   raise "unknown command #{command}"

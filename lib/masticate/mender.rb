@@ -4,14 +4,14 @@
 # (due to a newline embedded in a field).  Glue those two lines into a single line in the output.
 
 class Masticate::Mender
-  attr_reader :file
+  attr_reader :input
 
-  def initialize(file)
-    @file = file
+  def initialize(filename)
+    @input = open(filename)
   end
 
   def mend(opts)
-    output = opts[:output]
+    output = opts[:output] ? File.open(opts[:output], "w") : $stdout
     col_sep = opts[:col_sep]
 
     expected_count = nil
@@ -36,6 +36,8 @@ class Masticate::Mender
       output << line
     end
 
+    @input.close
+    output.close
     {
       :input_records => @input_count,
       :output_records => output_count
@@ -43,7 +45,7 @@ class Masticate::Mender
   end
 
   def get
-    (line = file.gets) && @input_count += 1
+    (line = input.gets) && @input_count += 1
     line
   end
 end
