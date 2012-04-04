@@ -14,30 +14,32 @@ class Masticate::Mender
     output = opts[:output] ? File.open(opts[:output], "w") : $stdout
     col_sep = opts[:col_sep]
 
-    expected_count = nil
+    expected_delim_count = nil
     @input_count = output_count = 0
     while (line = get) do
-      if !expected_count
-        # trust the first row
-        expected_count = line.count(col_sep)
-      else
-        running_count = line.count(col_sep)
-        until line.nil? || running_count >= expected_count
-          nextbit = get
-          if nextbit
-            line = line.chomp + ' ' + nextbit
-            running_count = line.count(col_sep)
-          else
-            line = nil
+      unless line =~ /^\s*$/
+        if !expected_delim_count
+          # trust the first row
+          expected_delim_count = line.count(col_sep)
+        else
+          running_count = line.count(col_sep)
+          while !input.eof? && running_count < expected_delim_count do
+            nextbit = get
+            if nextbit
+              line = line + ' ' + nextbit
+              running_count = line.count(col_sep)
+            end
           end
         end
+        if line.count(col_sep) > 2
+          output_count += 1
+          output.puts line
+        end
       end
-      output_count += 1
-      output << line
     end
 
     @input.close
-    output.close
+    output.close if opts[:output]
     {
       :input_records => @input_count,
       :output_records => output_count
@@ -45,7 +47,8 @@ class Masticate::Mender
   end
 
   def get
-    (line = input.gets) && @input_count += 1
-    line
+    line = input.gets
+    @input_count += 1
+    line && line.chomp
   end
 end
