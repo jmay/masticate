@@ -6,6 +6,8 @@ require_relative "masticate/sniffer"
 require_relative "masticate/mender"
 require_relative "masticate/csvify"
 require_relative "masticate/plucker"
+require_relative "masticate/datify"
+require_relative "masticate/gsubber"
 
 module Masticate
   def self.sniff(filename)
@@ -22,5 +24,13 @@ module Masticate
 
   def self.pluck(filename, opts)
     Plucker.new(filename).pluck(opts)
+  end
+
+  def self.datify(filename, opts)
+    Datify.new(filename).datify(opts)
+  end
+
+  def self.gsub(filename, opts)
+    Gsubber.new(filename).gsub(opts)
   end
 end

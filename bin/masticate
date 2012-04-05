@@ -21,6 +21,22 @@ OptionParser.new do |opts|
   opts.on("--fields LIST", Array, "Specify fields to select") do |list|
     options[:fields] = list
   end
+
+  opts.on("--field FIELD", "Specify field to convert") do |f|
+    options[:field] = f
+  end
+
+  opts.on("--snip DIRECTIVE", "Specify header fields to snip: first N, or by name") do |f|
+    options[:snip] = f.to_i
+  end
+
+  opts.on("--from REGEXP", "Regular expression for gsub conversion") do |s|
+    options[:from] = s
+  end
+
+  opts.on("--to STRING", "Result string for gsub conversion") do |s|
+    options[:to] = s
+  end
 end.parse!
 
 filename = ARGV.shift # use stdin if no filename provided
@@ -41,8 +57,8 @@ when 'mend'
   results = Masticate.mend(filename, options)
   $stderr.puts <<-EOT
 Processing complete.
-  Lines in input: #{results[:input_records]}
-  Lines in output: #{results[:output_records]}
+  Lines in input: #{results[:input_count]}
+  Lines in output: #{results[:output_count]}
 EOT
 
 when 'csvify'
@@ -60,6 +76,22 @@ Processing complete.
   Lines in input: #{results[:input_count]}
   Lines in output: #{results[:output_count]}
 EOT
+
+when 'datify'
+  results = Masticate.datify(filename, options)
+  $stderr.puts <<-EOT
+Processing complete.
+  Lines in input: #{results[:input_count]}
+  Lines in output: #{results[:output_count]}
+EOT
+
+when 'gsub'
+  results = Masticate.gsub(filename, options)
+#   $stderr.puts <<-EOT
+# Processing complete.
+#   Lines in input: #{results[:input_count]}
+#   Lines in output: #{results[:output_count]}
+# EOT
 
 else
   raise "unknown command #{command}"
