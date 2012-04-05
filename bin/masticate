@@ -17,6 +17,10 @@ OptionParser.new do |opts|
     options[:col_sep] = v
     options[:col_sep] = "\t" if options[:col_sep] == "TAB"
   end
+
+  opts.on("--fields LIST", Array, "Specify fields to select") do |list|
+    options[:fields] = list
+  end
 end.parse!
 
 filename = ARGV.shift # use stdin if no filename provided
@@ -43,6 +47,14 @@ EOT
 
 when 'csvify'
   results = Masticate.csvify(filename, options)
+  $stderr.puts <<-EOT
+Processing complete.
+  Lines in input: #{results[:input_count]}
+  Lines in output: #{results[:output_count]}
+EOT
+
+when 'pluck'
+  results = Masticate.pluck(filename, options)
   $stderr.puts <<-EOT
 Processing complete.
   Lines in input: #{results[:input_count]}

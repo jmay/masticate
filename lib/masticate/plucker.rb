@@ -8,7 +8,7 @@ class Masticate::Plucker < Masticate::Base
     csv_options[:col_sep] = opts[:col_sep] if opts[:col_sep]
     csv_options[:quote_char] = opts[:quote_char] || opts[:col_sep] if opts[:quote_char] || opts[:col_sep]
 
-    fields = opts[:fields]
+    fields = opts[:fields] or raise "missing fields to pluck"
 
     @output_count = 0
     headers = nil

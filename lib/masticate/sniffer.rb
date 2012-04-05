@@ -1,3 +1,5 @@
+require "set"
+
 class Masticate::Sniffer < Masticate::Base
   attr_reader :col_sep, :quote_char, :stats
   attr_reader :delimstats
