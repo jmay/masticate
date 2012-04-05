@@ -14,11 +14,12 @@ OptionParser.new do |opts|
   end
 
   opts.on("--delim DELIMITER", "Specify field delimiter (character or TAB)") do |v|
-    options[:delim] = v
+    options[:col_sep] = v
+    options[:col_sep] = "\t" if options[:col_sep] == "TAB"
   end
 end.parse!
 
-filename = ARGV.shift
+filename = ARGV.shift # use stdin if no filename provided
 
 case command
 when 'sniff'
@@ -33,23 +34,17 @@ Processing complete.
 EOT
 
 when 'mend'
-  col_sep = options[:delim]
-  col_sep = "TAB" if col_sep == "\t"
-  results = Masticate.mend(filename, :col_sep => col_sep)
+  results = Masticate.mend(filename, options)
   $stderr.puts <<-EOT
 Processing complete.
-  Input delimiter: #{col_sep}
   Lines in input: #{results[:input_records]}
   Lines in output: #{results[:output_records]}
 EOT
 
 when 'csvify'
-  col_sep = options[:delim]
-  col_sep = "TAB" if col_sep == "\t"
-  results = Masticate.csvify(filename, :col_sep => col_sep)
+  results = Masticate.csvify(filename, options)
   $stderr.puts <<-EOT
 Processing complete.
-  Input delimiter: #{col_sep}
   Lines in input: #{results[:input_count]}
   Lines in output: #{results[:output_count]}
 EOT

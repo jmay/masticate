@@ -1,6 +1,11 @@
 class Masticate::Base
+  attr_reader :filename
   attr_reader :input, :output
   attr_reader :input_count, :output_count
+
+  def initialize(filename)
+    @filename = filename
+  end
 
   def with_input
     @input = @filename ? open(@filename) : $stdin
