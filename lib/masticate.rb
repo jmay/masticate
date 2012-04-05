@@ -1,6 +1,7 @@
 require "open-uri"
 
 require_relative "masticate/version"
+require_relative "masticate/base"
 require_relative "masticate/sniffer"
 require_relative "masticate/mender"
 require_relative "masticate/csvify"

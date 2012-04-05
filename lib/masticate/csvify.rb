@@ -1,11 +1,9 @@
 # convert input to clean standard CSV
 require "csv"
 
-class Masticate::Csvify
-  attr_reader :input
-
+class Masticate::Csvify < Masticate::Base
   def initialize(filename)
-    @input = File.open(filename)
+    @filename = filename
   end
 
   def csvify(opts)
@@ -14,26 +12,18 @@ class Masticate::Csvify
     csv_options[:col_sep] = opts[:col_sep] if opts[:col_sep]
     csv_options[:quote_char] = opts[:quote_char] || opts[:col_sep] if opts[:quote_char] || opts[:col_sep]
 
-    input_count = @output_count = 0
-    CSV.foreach(input, csv_options) do |row|
-      input_count += 1
-      emit(row.to_csv)
+    @output_count = 0
+    with_input do |input|
+      while line = get
+        row = CSV.parse_line(line, csv_options)
+        emit(row.to_csv) if row
+      end
     end
     @output.close if opts[:output]
-    @input.close
+
     {
       :input_count => input_count,
       :output_count => @output_count
     }
-  end
-
-  def emit(line)
-    @output_count += 1
-    begin
-      @output.puts line
-    rescue Errno::EPIPE
-      # output was closed, e.g. ran piped into `head`
-      # silently ignore this condition, it's not fatal and doesn't need a warning
-    end
   end
 end

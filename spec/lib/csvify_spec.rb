@@ -11,7 +11,7 @@ describe "csvification" do
     output = File.read(tmp)
     tmp.unlink
     output.lines.count.should == 5
-    results[:input_count].should == 5
+    results[:input_count].should == 6
     results[:output_count].should == 5
   end
 end

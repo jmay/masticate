@@ -1,10 +1,26 @@
 #!/usr/bin/env ruby
 
 require_relative "../lib/masticate"
+require "optparse"
 
-command, filename = ARGV
+command = ARGV.shift
 
-case ARGV.shift
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: example.rb [options]"
+
+  opts.on("--format FORMAT", "Specify format") do |v|
+    options[:format] = v
+  end
+
+  opts.on("--delim DELIMITER", "Specify field delimiter (character or TAB)") do |v|
+    options[:delim] = v
+  end
+end.parse!
+
+filename = ARGV.shift
+
+case command
 when 'sniff'
   results = Masticate.sniff(filename)
   col_sep = results[:col_sep]
@@ -13,13 +29,13 @@ when 'sniff'
 Processing complete.
   Input delimiter: #{col_sep}
   Field counts: #{results[:field_counts].inspect}
+  Headers: #{results[:headers].join(',')}
 EOT
 
 when 'mend'
-  metadata = Masticate.sniff(filename)
-  col_sep = metadata[:col_sep]
+  col_sep = options[:delim]
   col_sep = "TAB" if col_sep == "\t"
-  results = Masticate.mend(filename, metadata)
+  results = Masticate.mend(filename, :col_sep => col_sep)
   $stderr.puts <<-EOT
 Processing complete.
   Input delimiter: #{col_sep}
@@ -28,11 +44,12 @@ Processing complete.
 EOT
 
 when 'csvify'
-  metadata = Masticate.sniff(filename)
-  results = Masticate.csvify(filename, metadata)
+  col_sep = options[:delim]
+  col_sep = "TAB" if col_sep == "\t"
+  results = Masticate.csvify(filename, :col_sep => col_sep)
   $stderr.puts <<-EOT
 Processing complete.
-  Input delimiter: #{metadata[:col_sep]}
+  Input delimiter: #{col_sep}
   Lines in input: #{results[:input_count]}
   Lines in output: #{results[:output_count]}
 EOT
