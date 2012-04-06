@@ -16,7 +16,7 @@ class Masticate::Gsubber < Masticate::Base
         row = CSV.parse_line(line, csv_options)
         if !headers
           headers = row
-          index = headers.index(field) or raise "Unable to find column '#{field}'"
+          index = headers.index(field) or raise "Unable to find column '#{field}' in headers"
           emit(line)
         else
           oldval = row[index]

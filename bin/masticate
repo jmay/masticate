@@ -85,11 +85,7 @@ when 'datify'
 
 when 'gsub'
   results = Masticate.gsub(filename, options)
-#   $stderr.puts <<-EOT
-# Processing complete.
-#   Lines in input: #{results[:input_count]}
-#   Lines in output: #{results[:output_count]}
-# EOT
+  logmessage(command, options, results)
 
 else
   raise "unknown command #{command}"
