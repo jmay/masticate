@@ -87,7 +87,7 @@ class Masticate::Mender < Masticate::Base
   end
 
   def explode(line)
-    CSV.parse_line(line, :col_sep => @col_sep, :quote_char => @quote_char)
+    CSV.parse_line(line, :col_sep => @col_sep, :quote_char => @quote_char).map {|s| s && s.strip}
   end
 
   # a line is "junky" if it has 2 or fewer fields with any content
