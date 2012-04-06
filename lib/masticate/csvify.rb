@@ -7,10 +7,7 @@ class Masticate::Csvify < Masticate::Base
   end
 
   def csvify(opts)
-    @output = opts[:output] ? File.open(opts[:output], "w") : $stdout
-    csv_options = {}
-    csv_options[:col_sep] = opts[:col_sep] if opts[:col_sep]
-    csv_options[:quote_char] = opts[:quote_char] || opts[:col_sep] if opts[:quote_char] || opts[:col_sep]
+    standard_options(opts)
 
     @output_count = 0
     with_input do |input|

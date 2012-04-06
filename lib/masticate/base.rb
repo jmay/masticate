@@ -2,6 +2,7 @@ class Masticate::Base
   attr_reader :filename
   attr_reader :input, :output
   attr_reader :input_count, :output_count
+  attr_reader :csv_options
 
   def initialize(filename)
     @filename = filename
@@ -28,6 +29,15 @@ class Masticate::Base
     rescue Errno::EPIPE
       # output was closed, e.g. ran piped into `head`
       # silently ignore this condition, it's not fatal and doesn't need a warning
+    end
+  end
+
+  def standard_options(opts)
+    @output = opts[:output] ? File.open(opts[:output], "w") : $stdout
+    @csv_options = {}
+    @csv_options[:col_sep] = opts[:col_sep] if opts[:col_sep]
+    if opts[:col_sep]
+      @csv_options[:quote_char] = opts[:quote_char] || "\0"
     end
   end
 end

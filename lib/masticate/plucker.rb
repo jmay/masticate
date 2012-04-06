@@ -3,10 +3,7 @@ require "csv"
 
 class Masticate::Plucker < Masticate::Base
   def pluck(opts)
-    @output = opts[:output] ? File.open(opts[:output], "w") : $stdout
-    csv_options = {}
-    csv_options[:col_sep] = opts[:col_sep] if opts[:col_sep]
-    csv_options[:quote_char] = opts[:quote_char] || opts[:col_sep] if opts[:quote_char] || opts[:col_sep]
+    standard_options(opts)
 
     fields = opts[:fields] or raise "missing fields to pluck"
 

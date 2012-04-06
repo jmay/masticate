@@ -3,10 +3,7 @@ require "csv"
 
 class Masticate::Gsubber < Masticate::Base
   def gsub(opts)
-    @output = opts[:output] ? File.open(opts[:output], "w") : $stdout
-    csv_options = {}
-    csv_options[:col_sep] = opts[:col_sep] if opts[:col_sep]
-    csv_options[:quote_char] = opts[:quote_char] || opts[:col_sep] if opts[:quote_char] || opts[:col_sep]
+    standard_options(opts)
 
     field = opts[:field] or raise "missing field to gsub"
     from = Regexp.new(opts[:from]) or raise "Invalid regex '#{opts[:from]}' for conversion"
