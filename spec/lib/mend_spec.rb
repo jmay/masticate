@@ -1,6 +1,7 @@
 # spec for file-sniffing functions
 
 require "spec_helper"
+require "tempfile"
 
 describe "mending" do
   it "should merge lines when delimiter counts don't match'" do
@@ -25,5 +26,17 @@ describe "mending" do
     results[:input_count].should == 6
     results[:output_count].should == 5
     results[:headers].should == %w(hospid usrorder dteorder usrsend dtesend usrdone dtedone department)
+  end
+
+  it "should unfold inlined headers" do
+    filename = File.dirname(__FILE__) + "/../data/inlined_headers.csv"
+    tmp = Tempfile.new('mending')
+    results = Masticate.mend(filename, :inlined => true, :output => tmp)
+    output = File.read(tmp)
+    correct_output = File.read(File.dirname(__FILE__) + "/../data/inlined_headers.csv.output")
+
+    results[:input_count].should == 11
+    results[:output_count].should == 11
+    output.should == correct_output
   end
 end

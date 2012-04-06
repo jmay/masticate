@@ -37,6 +37,10 @@ OptionParser.new do |opts|
   opts.on("--to STRING", "Result string for gsub conversion") do |s|
     options[:to] = s
   end
+
+  opts.on("--inlined", "(for *mend* only) Source file has headers inlined on each line") do |v|
+    options[:inlined] = v
+  end
 end.parse!
 
 filename = ARGV.shift # use stdin if no filename provided
@@ -46,9 +50,11 @@ when 'sniff'
   results = Masticate.sniff(filename)
   col_sep = results[:col_sep]
   col_sep = "TAB" if col_sep == "\t"
+  quote_char = results[:quote_char] || "NONE"
   $stderr.puts <<-EOT
 Processing complete.
   Input delimiter: #{col_sep}
+  Quote char: #{quote_char}
   Field counts: #{results[:field_counts].inspect}
   Headers: #{results[:headers].join(',')}
 EOT

@@ -21,7 +21,21 @@ class Masticate::Mender < Masticate::Base
     with_input do |input|
       while (line = get) do
         unless line =~ /^\s*$/
-          if !expected_field_count
+          if opts[:inlined]
+            row = explode(line)
+            ncells = row.count/2-1
+            if !expected_field_count
+              headers = row[0..ncells]
+              expected_field_count = headers.count
+              emit(headers.to_csv(:col_sep => @col_sep))
+            else
+              if row[0..ncells] != headers
+                raise "Header mismatch on line #{@input_count}\n  Expected: #{headers.join(',')}\n     Found: #{row[0..ncells].join(',')}"
+              end
+            end
+            row = row[ncells+1..-1]
+            emit(row.to_csv(:col_sep => @col_sep))
+          elsif !expected_field_count
             # trust the first row
             headers = explode(line).map(&:strip)
             case opts[:snip]
