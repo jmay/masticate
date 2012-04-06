@@ -13,9 +13,13 @@ OptionParser.new do |opts|
     options[:format] = v
   end
 
-  opts.on("--delim DELIMITER", "Specify field delimiter (character or TAB)") do |v|
+  opts.on("--delim DELIMITER", "Specify field delimiter (character or TAB; default is ',')") do |v|
     options[:col_sep] = v
     options[:col_sep] = "\t" if options[:col_sep] == "TAB"
+  end
+
+  opts.on("--quote QUOTE-CHAR", "Specify character used for quoting fields (optional; default is no quoting)") do |char|
+    options[:quote_char] = char
   end
 
   opts.on("--fields LIST", Array, "Specify fields to select") do |list|
@@ -40,6 +44,10 @@ OptionParser.new do |opts|
 
   opts.on("--inlined", "(for *mend* only) Source file has headers inlined on each line") do |v|
     options[:inlined] = v
+  end
+
+  opts.on("--dejunk", "(for *mend* only) Expunge junk lines from source") do |v|
+    options[:dejunk] = v
   end
 end.parse!
 

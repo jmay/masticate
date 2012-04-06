@@ -30,7 +30,7 @@ describe "mending" do
   it "should unfold inlined headers" do
     filename = File.dirname(__FILE__) + "/../data/inlined_headers.csv"
     tmp = Tempfile.new('mending')
-    results = Masticate.mend(filename, :inlined => true, :output => tmp)
+    results = Masticate.mend(filename, :col_sep => ',', :quote_char => '"', :inlined => true, :output => tmp)
     output = File.read(tmp)
     correct_output = File.read(File.dirname(__FILE__) + "/../data/inlined_headers.csv.output")
 
