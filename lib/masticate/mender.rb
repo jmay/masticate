@@ -60,7 +60,7 @@ class Masticate::Mender < Masticate::Base
               end
             end
 
-            if line.count(col_sep) > 2
+            unless opts[:dejunk] && junky?(line)
               emit(line)
             end
           end
@@ -82,5 +82,10 @@ class Masticate::Mender < Masticate::Base
 
   def explode(line)
     CSV.parse_line(line, :col_sep => col_sep, :quote_char => @quote_char)
+  end
+
+  # a line is "junky" if it has 2 or fewer fields with any content
+  def junky?(line)
+    explode(line).select {|s| s && !s.strip.empty?}.count <= 2
   end
 end

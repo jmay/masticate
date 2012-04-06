@@ -13,9 +13,8 @@ describe "mending" do
 
   it "should strip trailer records" do
     filename = File.dirname(__FILE__) + "/../data/junk_trailer.txt"
-    metadata = Masticate.sniff(filename)
-    results = Masticate.mend(filename, metadata.merge(:output => "/dev/null"))
-    results[:input_count].should == 9
+    results = Masticate.mend(filename, :col_sep => '|', :output => "/dev/null", :dejunk => true)
+    results[:input_count].should == 10
     results[:output_count].should == 5
     results[:headers].should == ['COL1', 'COL 2', 'Col 3', 'col-4', 'col5', 'col6']
   end
