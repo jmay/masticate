@@ -8,6 +8,7 @@ require_relative "masticate/csvify"
 require_relative "masticate/plucker"
 require_relative "masticate/datify"
 require_relative "masticate/gsubber"
+require_relative "masticate/max_rows"
 
 module Masticate
   def self.sniff(filename)
@@ -32,5 +33,9 @@ module Masticate
 
   def self.gsub(filename, opts)
     Gsubber.new(filename).gsub(opts)
+  end
+
+  def self.maxrows(filename, opts)
+    MaxRows.new(filename).maxrows(opts)
   end
 end

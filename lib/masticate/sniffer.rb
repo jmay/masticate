@@ -67,13 +67,8 @@ class Masticate::Sniffer < Masticate::Base
   end
 
   def stats
-    counts = with_input do |input|
-      if col_sep == ',' && quote_char
-        input.lines.each_with_object(Hash.new(0)) {|line, counts| counts[CSV.parse_line(line, :quote_char => quote_char).count] += 1}
-      else
-        input.lines.each_with_object(Hash.new(0)) {|line, counts| counts[line.split(col_sep).count] += 1}
-      end
+    with_input do |input|
+      input.lines.each_with_object(Hash.new(0)) {|line, counts| counts[CSV.parse_line(line, :col_sep => col_sep, :quote_char => quote_char || "\0").count] += 1}
     end
-    counts
   end
 end

@@ -13,6 +13,7 @@ class Masticate::Mender < Masticate::Base
   def mend(opts)
     @output = opts[:output] ? File.open(opts[:output], "w") : $stdout
     @col_sep = opts[:col_sep] || ','
+    @quote_char = opts[:quote_char] || "\0"
 
     expected_field_count = nil
     headers = nil
@@ -22,10 +23,12 @@ class Masticate::Mender < Masticate::Base
         unless line =~ /^\s*$/
           if !expected_field_count
             # trust the first row
-            headers = explode(line)
+            headers = explode(line).map(&:strip)
             case opts[:snip]
             when Fixnum
               headers.shift(opts[:snip])
+            when String
+              raise "TODO: snip named header. Multiple?"
             when nil
               # do nothing
             else
@@ -60,18 +63,10 @@ class Masticate::Mender < Masticate::Base
   end
 
   def fieldcount(line)
-    if col_sep == ','
-      CSV.parse_line(line).count
-    else
-      line.count(col_sep)+1
-    end
+    explode(line).count
   end
 
   def explode(line)
-    if col_sep == ','
-      CSV.parse_line(line).map(&:strip)
-    else
-      line.split(col_sep).map(&:strip)
-    end
+    CSV.parse_line(line, :col_sep => col_sep, :quote_char => @quote_char)
   end
 end
