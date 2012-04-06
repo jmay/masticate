@@ -59,6 +59,9 @@ def logmessage(command, options, results)
   Lines in input: #{results[:input_count]}
   Lines in output: #{results[:output_count]}
 EOT
+  if results[:field_counts]
+    $stderr.puts "  Field counts: #{results[:field_counts].inspect}"
+  end
 end
 
 case command

@@ -18,6 +18,7 @@ class Masticate::Mender < Masticate::Base
     expected_field_count = nil
     headers = nil
     @output_count = 0
+    fieldcounts = Hash.new(0)
     with_input do |input|
       while (line = get) do
         unless line =~ /^\s*$/
@@ -27,13 +28,15 @@ class Masticate::Mender < Masticate::Base
             if !expected_field_count
               headers = row[0..ncells]
               expected_field_count = headers.count
+              fieldcounts[headers.count] += 1
               emit(headers.to_csv(:col_sep => @col_sep))
             else
               if row[0..ncells] != headers
                 raise "Header mismatch on line #{@input_count}\n  Expected: #{headers.join(',')}\n     Found: #{row[0..ncells].join(',')}"
               end
             end
-            row = row[ncells+1..-1]
+            row = row[ncells+1, expected_field_count]
+            fieldcounts[row.count] += 1
             emit(row.to_csv(:col_sep => @col_sep))
           elsif !expected_field_count
             # trust the first row
@@ -49,6 +52,7 @@ class Masticate::Mender < Masticate::Base
               raise "Do not understand snip instruction [#{opts[:snip].inspect}]"
             end
             expected_field_count = headers.count
+            fieldcounts[headers.count] += 1
             emit(headers.to_csv(:col_sep => @col_sep))
           else
             running_count = fieldcount(line)
@@ -61,6 +65,7 @@ class Masticate::Mender < Masticate::Base
             end
 
             unless opts[:dejunk] && junky?(line)
+              fieldcounts[fieldcount(line)] += 1
               emit(line)
             end
           end
@@ -72,6 +77,7 @@ class Masticate::Mender < Masticate::Base
     {
       :input_count => @input_count,
       :output_count => @output_count,
+      :field_counts => fieldcounts,
       :headers => headers
     }
   end
@@ -81,7 +87,7 @@ class Masticate::Mender < Masticate::Base
   end
 
   def explode(line)
-    CSV.parse_line(line, :col_sep => col_sep, :quote_char => @quote_char)
+    CSV.parse_line(line, :col_sep => @col_sep, :quote_char => @quote_char)
   end
 
   # a line is "junky" if it has 2 or fewer fields with any content

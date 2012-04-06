@@ -36,6 +36,7 @@ describe "mending" do
 
     results[:input_count].should == 11
     results[:output_count].should == 11
+    results[:field_counts].should == {11 => 11}
     output.should == correct_output
   end
 end
