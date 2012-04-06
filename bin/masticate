@@ -45,6 +45,14 @@ end.parse!
 
 filename = ARGV.shift # use stdin if no filename provided
 
+def logmessage(command, options, results)
+  $stderr.puts <<-EOT
+* masticate #{command} (#{options.keys.join(', ')})
+  Lines in input: #{results[:input_count]}
+  Lines in output: #{results[:output_count]}
+EOT
+end
+
 case command
 when 'sniff'
   results = Masticate.sniff(filename)
@@ -61,35 +69,19 @@ EOT
 
 when 'mend'
   results = Masticate.mend(filename, options)
-  $stderr.puts <<-EOT
-Processing complete.
-  Lines in input: #{results[:input_count]}
-  Lines in output: #{results[:output_count]}
-EOT
+  logmessage(command, options, results)
 
 when 'csvify'
   results = Masticate.csvify(filename, options)
-  $stderr.puts <<-EOT
-Processing complete.
-  Lines in input: #{results[:input_count]}
-  Lines in output: #{results[:output_count]}
-EOT
+  logmessage(command, options, results)
 
 when 'pluck'
   results = Masticate.pluck(filename, options)
-  $stderr.puts <<-EOT
-Processing complete.
-  Lines in input: #{results[:input_count]}
-  Lines in output: #{results[:output_count]}
-EOT
+  logmessage(command, options, results)
 
 when 'datify'
   results = Masticate.datify(filename, options)
-  $stderr.puts <<-EOT
-Processing complete.
-  Lines in input: #{results[:input_count]}
-  Lines in output: #{results[:output_count]}
-EOT
+  logmessage(command, options, results)
 
 when 'gsub'
   results = Masticate.gsub(filename, options)
