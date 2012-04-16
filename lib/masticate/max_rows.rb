@@ -3,10 +3,7 @@ require "csv"
 
 class Masticate::MaxRows < Masticate::Base
   def maxrows(opts)
-    @output = opts[:output] ? File.open(opts[:output], "w") : $stdout
-    csv_options = {}
-    csv_options[:col_sep] = opts[:col_sep] if opts[:col_sep]
-    csv_options[:quote_char] = opts[:quote_char] || "\0"
+    standard_options(opts)
 
     groupby = opts[:by] or raise "missing field to group by"
     maxon = opts[:max] or raise "missing field to max on"
@@ -44,7 +41,7 @@ class Masticate::MaxRows < Masticate::Base
     @output.close if opts[:output]
 
     {
-      :input_count => input_count,
+      :input_count => @input_count,
       :output_count => @output_count
     }
   end

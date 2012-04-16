@@ -9,52 +9,56 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: example.rb [options]"
 
-  opts.on("--format FORMAT", "Specify format") do |v|
+  opts.on("--format FORMAT", String, "Specify format") do |v|
     options[:format] = v
   end
 
-  opts.on("--delim DELIMITER", "Specify field delimiter (character or TAB; default is ',')") do |v|
+  opts.on("--delim DELIMITER", String, "Specify field delimiter (character or TAB; default is ',')") do |v|
     options[:col_sep] = v
     options[:col_sep] = "\t" if options[:col_sep] == "TAB"
   end
 
-  opts.on("--quote QUOTE-CHAR", "Specify character used for quoting fields (optional; default is no quoting)") do |char|
+  opts.on("--quote QUOTE-CHAR", String, "Specify character used for quoting fields (optional; default is no quoting)") do |char|
     options[:quote_char] = char
+  end
+
+  opts.on("--stats", "(for *sniff*) collect & display input stats") do
+    options[:stats] = true
   end
 
   opts.on("--fields LIST", Array, "Specify fields to select") do |list|
     options[:fields] = list
   end
 
-  opts.on("--field FIELD", "Specify field to convert") do |f|
+  opts.on("--field FIELD", String, "Specify field to convert") do |f|
     options[:field] = f
   end
 
-  opts.on("--snip DIRECTIVE", "Specify header fields to snip: first N, or by name") do |f|
+  opts.on("--snip DIRECTIVE", String, "Specify header fields to snip: first N, or by name") do |f|
     options[:snip] = f.to_i
   end
 
-  opts.on("--from REGEXP", "Regular expression for gsub conversion") do |s|
+  opts.on("--from REGEXP", String, "Regular expression for gsub conversion") do |s|
     options[:from] = s
   end
 
-  opts.on("--to STRING", "Result string for gsub conversion") do |s|
+  opts.on("--to STRING", String, "Result string for gsub conversion") do |s|
     options[:to] = s
   end
 
-  opts.on("--inlined", "(for *mend* only) Source file has headers inlined on each line") do |v|
-    options[:inlined] = v
+  opts.on("--inlined", "(for *mend* only) Source file has headers inlined on each line") do |b|
+    options[:inlined] = true
   end
 
-  opts.on("--dejunk", "(for *mend* only) Expunge junk lines from source") do |v|
-    options[:dejunk] = v
+  opts.on("--dejunk", "(for *mend* only) Expunge junk lines from source") do |b|
+    options[:dejunk] = true
   end
 
-  opts.on("--by FIELD", "(for *maxrows* only) Field to group by") do |f|
+  opts.on("--by FIELD", String, "(for *maxrows* only) Field to group by") do |f|
     options[:by] = f
   end
 
-  opts.on("--max FIELD", "(for *maxrows* only) Field to find max value for") do |f|
+  opts.on("--max FIELD", String, "(for *maxrows* only) Field to find max value for") do |f|
     options[:max] = f
   end
 end.parse!
@@ -74,7 +78,7 @@ end
 
 case command
 when 'sniff'
-  results = Masticate.sniff(filename)
+  results = Masticate.sniff(filename, options)
   col_sep = results[:col_sep]
   col_sep = "TAB" if col_sep == "\t"
   quote_char = results[:quote_char] || "NONE"
