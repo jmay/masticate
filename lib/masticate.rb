@@ -11,8 +11,8 @@ require_relative "masticate/gsubber"
 require_relative "masticate/max_rows"
 
 module Masticate
-  def self.sniff(filename)
-    Sniffer.new(filename).sniff
+  def self.sniff(filename, opts = {})
+    Sniffer.new(filename).sniff(opts)
   end
 
   def self.mend(filename, opts)

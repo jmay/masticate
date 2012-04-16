@@ -10,10 +10,10 @@ class Masticate::Sniffer < Masticate::Base
     @filename = filename
   end
 
-  def sniff
+  def sniff(opts)
     @col_sep = find_col_sep
     @quote_char = delimstats[@col_sep][:quote_char]
-    @stats = stats
+    @stats = stats if opts[:stats]
     {
       :col_sep => @col_sep,
       :quote_char => @quote_char,
