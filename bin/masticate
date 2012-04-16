@@ -49,6 +49,14 @@ OptionParser.new do |opts|
   opts.on("--dejunk", "(for *mend* only) Expunge junk lines from source") do |v|
     options[:dejunk] = v
   end
+
+  opts.on("--by FIELD", "(for *maxrows* only) Field to group by") do |f|
+    options[:by] = f
+  end
+
+  opts.on("--max FIELD", "(for *maxrows* only) Field to find max value for") do |f|
+    options[:max] = f
+  end
 end.parse!
 
 filename = ARGV.shift # use stdin if no filename provided
@@ -96,6 +104,10 @@ when 'datify'
 
 when 'gsub'
   results = Masticate.gsub(filename, options)
+  logmessage(command, options, results)
+
+when 'maxrows'
+  results = Masticate.maxrows(filename, options)
   logmessage(command, options, results)
 
 else
