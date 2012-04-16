@@ -14,8 +14,21 @@ class Masticate::Plucker < Masticate::Base
         row = CSV.parse_line(line, csv_options)
         if !headers
           headers = row
-          indexes = fields.map {|f| headers.index(f) or raise "Unable to find column '#{f}'"}
-          emit(fields.to_csv)
+          indexes = fields.map do |f|
+            case f
+            when String
+              headers.index(f) or raise "Unable to find column '#{f}'"
+            when Fixnum
+              if f > headers.count
+                raise "Cannot pluck column #{f}, there are only #{headers.count} fields"
+              else
+                f-1
+              end
+            else
+              raise "Invalid field descriptor '#{f}'"
+            end
+          end
+          emit(indexes.map {|i| headers[i]}.to_csv)
         else
           emit(indexes.map {|i| row[i]}.to_csv) if row
         end

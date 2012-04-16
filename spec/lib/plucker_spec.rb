@@ -15,4 +15,16 @@ describe "plucker" do
     results[:input_count].should == 5
     output.should == correct_output
   end
+
+  it "should pull numbered columns starting at 1" do
+    filename = File.dirname(__FILE__) + "/../data/namedcols.csv"
+    tmp = Tempfile.new('plucker')
+    results = Masticate.pluck(filename, :output => tmp, :fields => [3,5])
+    output = File.read(tmp)
+    correct_output = File.read(File.dirname(__FILE__) + "/../data/namedcols.csv.output")
+    tmp.unlink
+
+    results[:input_count].should == 5
+    output.should == correct_output
+  end
 end
