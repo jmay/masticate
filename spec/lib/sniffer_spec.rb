@@ -31,4 +31,11 @@ describe "delimiter sniffing" do
     results[:quote_char].should == '"'
     results[:field_counts].should == {14 => 100}
   end
+
+  it "should find tilde delimiter" do
+    filename = File.dirname(__FILE__) + "/../data/tilde_data.txt"
+    results = Masticate.sniff(filename, :stats => true)
+    results[:col_sep].should == '~'
+    results[:field_counts].should == {6 => 5}
+  end
 end
