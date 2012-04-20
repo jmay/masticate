@@ -2,70 +2,7 @@
 
 require_relative "../lib/masticate"
 
-command, options, filenames = Masticate::MyOptionParser.new.parse
-filename = filenames.first
+masticator = Masticate::MyOptionParser.new
+command, options, filenames = masticator.parse
 
-def logmessage(command, options, results)
-  $stderr.puts <<-EOT
-* masticate #{command} (#{options.keys.join(', ')})
-  Lines in input: #{results[:input_count]}
-  Lines in output: #{results[:output_count]}
-EOT
-  if results[:field_counts]
-    $stderr.puts "  Field counts: #{results[:field_counts].inspect}"
-  end
-end
-
-case command
-when 'sniff'
-  results = Masticate.sniff(filename, options)
-  col_sep = results[:col_sep]
-  col_sep = "TAB" if col_sep == "\t"
-  quote_char = results[:quote_char] || "NONE"
-  $stderr.puts <<-EOT
-Processing complete.
-  Input delimiter: #{col_sep}
-  Quote char: #{quote_char}
-  Field counts: #{results[:field_counts].inspect}
-  Headers: #{results[:headers].join(',')}
-EOT
-
-when 'mend'
-  results = Masticate.mend(filename, options)
-  logmessage(command, options, results)
-
-when 'csvify'
-  results = Masticate.csvify(filename, options)
-  logmessage(command, options, results)
-
-when 'pluck'
-  results = Masticate.pluck(filename, options)
-  logmessage(command, options, results)
-
-when 'datify'
-  results = Masticate.datify(filename, options)
-  logmessage(command, options, results)
-
-when 'gsub'
-  results = Masticate.gsub(filename, options)
-  logmessage(command, options, results)
-
-when 'maxrows'
-  results = Masticate.maxrows(filename, options)
-  logmessage(command, options, results)
-
-when 'concat'
-  results = Masticate.concat(ARGV, options)
-  # logmessage(command, options, results)
-
-when 'relabel'
-  results = Masticate.relabel(filename, options)
-  # logmessage(command, options, results)
-
-when 'cook'
-  results = Masticate.cook(filename, options)
-  logmessage(command, options, results)
-
-else
-  raise "unknown command #{command}"
-end
+masticator.execute(command, options, filenames)

@@ -17,10 +17,12 @@ class Masticate::Cook < Masticate::Base
     standard_options(opts)
 
     recipe.each do |step|
-      puts step
+      # puts step
       argv = Shellwords.split(step)
-      command = argv.shift
-      puts "#{command}: #{argv}"
+      masticator = Masticate::MyOptionParser.new
+      command, options = masticator.parse(argv)
+      puts "#{command}: #{options}"
+      masticator.execute(command, options)
     end
 
     # @output_count = 0
