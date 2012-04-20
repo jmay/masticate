@@ -66,6 +66,10 @@ OptionParser.new do |opts|
   opts.on("--max FIELD", String, "(for *maxrows* only) Field to find max value for") do |f|
     options[:max] = f
   end
+
+  opts.on("--recipe FILENAME", String, "(*cook* only) Recipe file") do |f|
+    options[:recipe] = f
+  end
 end.parse!
 
 filename = ARGV.first # use stdin if no filename provided
@@ -126,6 +130,10 @@ when 'concat'
 when 'relabel'
   results = Masticate.relabel(filename, options)
   # logmessage(command, options, results)
+
+when 'cook'
+  results = Masticate.cook(filename, options)
+  logmessage(command, options, results)
 
 else
   raise "unknown command #{command}"
