@@ -12,6 +12,7 @@ require_relative "masticate/datify"
 require_relative "masticate/gsubber"
 require_relative "masticate/max_rows"
 require_relative "masticate/concat"
+require_relative "masticate/relabel"
 
 module Masticate
   def self.sniff(filename, opts = {})
@@ -44,5 +45,9 @@ module Masticate
 
   def self.concat(filenames, opts)
     Concat.new(filenames).concat(opts)
+  end
+
+  def self.relabel(filename, opts)
+    Relabel.new(filename).relabel(opts)
   end
 end

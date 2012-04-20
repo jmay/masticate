@@ -123,6 +123,10 @@ when 'concat'
   results = Masticate.concat(ARGV, options)
   # logmessage(command, options, results)
 
+when 'relabel'
+  results = Masticate.relabel(filename, options)
+  # logmessage(command, options, results)
+
 else
   raise "unknown command #{command}"
 end
