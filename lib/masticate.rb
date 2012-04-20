@@ -1,5 +1,7 @@
 require "open-uri"
 
+require "csv"
+
 require_relative "masticate/version"
 require_relative "masticate/base"
 require_relative "masticate/sniffer"
@@ -9,6 +11,7 @@ require_relative "masticate/plucker"
 require_relative "masticate/datify"
 require_relative "masticate/gsubber"
 require_relative "masticate/max_rows"
+require_relative "masticate/concat"
 
 module Masticate
   def self.sniff(filename, opts = {})
@@ -37,5 +40,9 @@ module Masticate
 
   def self.maxrows(filename, opts)
     MaxRows.new(filename).maxrows(opts)
+  end
+
+  def self.concat(filenames, opts)
+    Concat.new(filenames).concat(opts)
   end
 end

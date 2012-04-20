@@ -1,7 +1,6 @@
 # spec for field regexp conversion
 
 require "spec_helper"
-require "tempfile"
 
 describe "gsubbing" do
   it "should apply conversion to a single column" do

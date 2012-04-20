@@ -9,6 +9,10 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: example.rb [options]"
 
+  opts.on("--output FILENAME", String, "Redirect output from stdout to file") do |f|
+    options[:output] = f
+  end
+
   opts.on("--format FORMAT", String, "Specify format") do |v|
     options[:format] = v
   end
@@ -42,7 +46,8 @@ OptionParser.new do |opts|
     options[:from] = s
   end
 
-  opts.on("--to STRING", String, "Result string for gsub conversion") do |s|
+  # if I specify String here, then a blank string '' is considered invalid and triggers an exception.
+  opts.on("--to STRING", "Result string for gsub conversion") do |s|
     options[:to] = s
   end
 
@@ -63,7 +68,7 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-filename = ARGV.shift # use stdin if no filename provided
+filename = ARGV.first # use stdin if no filename provided
 
 def logmessage(command, options, results)
   $stderr.puts <<-EOT
@@ -113,6 +118,10 @@ when 'gsub'
 when 'maxrows'
   results = Masticate.maxrows(filename, options)
   logmessage(command, options, results)
+
+when 'concat'
+  results = Masticate.concat(ARGV, options)
+  # logmessage(command, options, results)
 
 else
   raise "unknown command #{command}"
