@@ -4,8 +4,15 @@ class Masticate::Base
   attr_reader :input_count, :output_count
   attr_reader :csv_options
 
-  def initialize(filename)
-    @filename = filename
+  def initialize(args)
+    case args
+    when String
+      @filename = args
+    when Hash
+      configure(args)
+    else
+      raise "invalid initialization: #{args}"
+    end
   end
 
   def with_input
@@ -40,4 +47,8 @@ class Masticate::Base
       @csv_options[:quote_char] = opts[:quote_char] || "\0"
     end
   end
+
+  # def crunch(row)
+  #   # noop
+  # end
 end

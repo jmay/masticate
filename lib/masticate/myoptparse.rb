@@ -79,6 +79,21 @@ class Masticate::MyOptionParser
     [@command, @options, filenames]
   end
 
+  def prepare(command, options)
+    puts "PREPARING #{command}: #{options}"
+
+    klasses = {
+      'gsub' => Masticate::Gsubber,
+      'datify' => Masticate::Datify,
+      'maxrows' => Masticate::MaxRows,
+      'relabel' => Masticate::Relabel,
+      'pluck' => Masticate::Plucker
+    }
+
+    klass = klasses[command]
+    klass.new(options)
+  end
+
   def execute(command, options, filenames = nil)
     filename = filenames.first
 

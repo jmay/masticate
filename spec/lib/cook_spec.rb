@@ -10,7 +10,7 @@ describe "cooking up a recipe" do
     results = Masticate.cook(input, :output => tmp, :recipe => recipe)
     output = File.read(tmp)
     correct_output = File.read(File.dirname(__FILE__) + "/../data/cooking_result.csv")
-
+  
     output.should == correct_output
   end
 end
