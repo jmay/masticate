@@ -10,17 +10,7 @@ class Masticate::Relabel < Masticate::Base
   end
 
   def relabel(opts)
-    configure(opts)
-
-    @output_count = 0
-    headers = nil
-    with_input do |input|
-      while line = get
-        row = CSV.parse_line(line, csv_options)
-        emit crunch(row)
-      end
-    end
-    @output.close if opts[:output]
+    execute(opts)
   end
 
   def crunch(row)

@@ -54,7 +54,23 @@ class Masticate::Base
     end
   end
 
-  # def crunch(row)
-  #   # noop
-  # end
+  def execute(opts)
+    configure(opts)
+
+    @output_count = 0
+    with_input do |input|
+      while line = get
+        row = CSV.parse_line(line, csv_options)
+        output = crunch(row)
+        emit(output) if output
+      end
+    end
+    crunch(nil) {|row| emit(row)}
+    @output.close if opts[:output]
+
+    {
+      :input_count => input_count,
+      :output_count => @output_count
+    }
+  end
 end

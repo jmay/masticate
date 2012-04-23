@@ -40,9 +40,7 @@ class Masticate::Cook < Masticate::Base
       end
     end
     steps.each do |step|
-      step.crunch(nil) do |row|
-        emit(row)
-      end
+      step.crunch(nil) {|row| emit(row)}
     end
 
     @output.close if opts[:output]

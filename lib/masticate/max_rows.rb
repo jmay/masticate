@@ -10,26 +10,7 @@ class Masticate::MaxRows < Masticate::Base
   end
 
   def maxrows(opts)
-    configure(opts)
-
-    @output_count = 0
-    headers = nil
-    accum = {}
-    with_input do |input|
-      while line = get
-        row = CSV.parse_line(line, csv_options)
-        row = crunch(row)
-        emit row if row
-      end
-      crunch(nil) {|row| emit(row)}
-    end
-
-    @output.close if opts[:output]
-
-    {
-      :input_count => @input_count,
-      :output_count => @output_count
-    }
+    execute(opts)
   end
 
   def crunch(row)
