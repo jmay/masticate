@@ -37,7 +37,6 @@ class Masticate::Relabel < Masticate::Base
   def crunch(row)
     if !@headers
       @headers = @fields
-      puts "output #{@headers}"
       row = @headers
     end
     row

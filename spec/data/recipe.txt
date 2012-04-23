@@ -1,4 +1,4 @@
-gsub --field order_number --from '/,|(.00$)/' --to ''
+gsub --field order_number --from ',|(.00$)' --to ''
 relabel --fields one,two,three,four,five,six,seven,eight,nine,ten,eleven,twelve,thirteen,fourteen
 pluck --fields two,eight,fourteen
 maxrows --by two --max eight

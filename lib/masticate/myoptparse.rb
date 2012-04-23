@@ -80,8 +80,6 @@ class Masticate::MyOptionParser
   end
 
   def prepare(command, options)
-    puts "PREPARING #{command}: #{options}"
-
     klasses = {
       'gsub' => Masticate::Gsubber,
       'datify' => Masticate::Datify,

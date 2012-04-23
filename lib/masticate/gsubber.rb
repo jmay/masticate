@@ -43,13 +43,11 @@ class Masticate::Gsubber < Masticate::Base
   end
 
   def crunch(row)
-    # puts "GSUB CRUNCH #{row}"
     if !@headers
       set_headers(row)
     else
       row[@index] = row[@index].gsub(@from, @to)
     end
-    # puts "GSUB RESULT IS #{row}"
     row
   end
 end

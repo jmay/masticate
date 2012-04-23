@@ -31,7 +31,7 @@ class Masticate::Cook < Masticate::Base
         row = CSV.parse_line(line, csv_options)
 
         steps.each do |step|
-          puts "APPLY #{step} to #{row}"
+          # puts "APPLY #{step} to #{row}"
           row = step.crunch(row)
         end
 
