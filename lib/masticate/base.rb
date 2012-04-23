@@ -30,9 +30,15 @@ class Masticate::Base
   end
 
   def emit(line)
+    @output_count ||= 0
     @output_count += 1
     begin
-      @output.puts line
+      case line
+      when Array
+        @output.puts line.to_csv
+      else
+        @output.puts line
+      end
     rescue Errno::EPIPE
       # output was closed, e.g. ran piped into `head`
       # silently ignore this condition, it's not fatal and doesn't need a warning

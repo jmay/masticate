@@ -17,21 +17,10 @@ class Masticate::Relabel < Masticate::Base
     with_input do |input|
       while line = get
         row = CSV.parse_line(line, csv_options)
-        if !headers
-          headers = @fields
-          emit(headers.to_csv)
-        else
-          emit(row.to_csv)
-        end
+        emit crunch(row)
       end
     end
     @output.close if opts[:output]
-
-    # File.unlink(opts[:output]) if opts[:output] && File.exists?(opts[:output])
-    # redirect = ">>#{opts[:output]}" if opts[:output]
-    # 
-    # system "/bin/echo -n '#{fields.to_csv}' #{redirect}"
-    # system "tail +2 #{@filename} #{redirect}"
   end
 
   def crunch(row)

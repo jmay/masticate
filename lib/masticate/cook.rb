@@ -12,6 +12,8 @@ class Masticate::Cook < Masticate::Base
   end
 
   def cook(opts)
+    standard_options(opts)
+
     recipefile = opts[:recipe] or raise "missing recipe for cook"
     recipe = File.read(recipefile).lines
     standard_options(opts)
@@ -31,13 +33,18 @@ class Masticate::Cook < Masticate::Base
         row = CSV.parse_line(line, csv_options)
 
         steps.each do |step|
-          # puts "APPLY #{step} to #{row}"
-          row = step.crunch(row)
+          row = step.crunch(row) if row
         end
 
-        emit(row.to_csv) if row
+        emit(row) if row
       end
     end
+    steps.each do |step|
+      step.crunch(nil) do |row|
+        emit(row)
+      end
+    end
+
     @output.close if opts[:output]
 
     {

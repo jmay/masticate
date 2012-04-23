@@ -22,16 +22,7 @@ class Masticate::Gsubber < Masticate::Base
     with_input do |input|
       while line = get
         row = CSV.parse_line(line, csv_options)
-        if !headers
-          headers = row
-          index = headers.index(@field) or raise "Unable to find column '#{@field}' in headers"
-          emit(line)
-        else
-          oldval = row[index]
-          newval = oldval.gsub(@from, @to)
-          row[index] = newval
-          emit(row.to_csv)
-        end
+        emit crunch(row)
       end
     end
     @output.close if opts[:output]
@@ -45,7 +36,7 @@ class Masticate::Gsubber < Masticate::Base
   def crunch(row)
     if !@headers
       set_headers(row)
-    else
+    elsif row
       row[@index] = row[@index].gsub(@from, @to)
     end
     row
