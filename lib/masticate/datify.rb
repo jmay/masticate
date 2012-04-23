@@ -2,32 +2,23 @@
 require "csv"
 
 class Masticate::Datify < Masticate::Base
-  def datify(opts)
+  def configure(opts)
     standard_options(opts)
+    @field = opts[:field] or raise "missing field to datify"
+    @format = opts[:format] or raise "strptime format required for parsing timestamps"
+  end
 
-    field = opts[:field] or raise "missing field to datify"
-    format = opts[:format] or raise "strptime format required for parsing timestamps"
+  def datify(opts)
+    execute(opts)
+  end
 
-    @output_count = 0
-    headers = nil
-    with_input do |input|
-      while line = get
-        row = CSV.parse_line(line, csv_options)
-        if !headers
-          headers = row
-          index = headers.index(field) or raise "Unable to find column '#{field}'"
-          emit(headers.to_csv)
-        else
-          row[index] = DateTime.strptime(row[index], format).to_time.to_i rescue nil
-          emit(row.to_csv)
-        end
-      end
+  def crunch(row)
+    if !@index
+      @index = row.index(@field) or raise "Unable to find column '#{@field}'"
+    elsif row
+      ts = DateTime.strptime(row[@index], @format).to_time
+      row[@index] = ts.to_i rescue nil
     end
-    @output.close if opts[:output]
-
-    {
-      :input_count => @input_count,
-      :output_count => @output_count
-    }
+    row
   end
 end

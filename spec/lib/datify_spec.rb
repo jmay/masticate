@@ -1,4 +1,4 @@
-# spec for file-sniffing functions
+# spec for data translation functions
 
 require "spec_helper"
 
