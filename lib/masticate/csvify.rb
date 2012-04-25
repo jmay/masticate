@@ -14,7 +14,7 @@ class Masticate::Csvify < Masticate::Base
       while line = get
         row = CSV.parse_line(line, csv_options)
         if row
-          row = row.map(&:strip)
+          row = row.map {|s| s && s.strip}
           emit(row)
         end
       end

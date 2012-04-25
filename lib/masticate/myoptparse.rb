@@ -37,7 +37,8 @@ class Masticate::MyOptionParser
         @options[:field] = f
       end
 
-      opts.on("--value VALUE", String, "(*exclude* only) Value to compare field to for exclusion") do |s|
+      # if I specify String here, then a blank string '' is considered invalid and triggers an exception.
+      opts.on("--value VALUE", "(*exclude* only) Value to compare field to for exclusion") do |s|
         @options[:value] = s
       end
 
