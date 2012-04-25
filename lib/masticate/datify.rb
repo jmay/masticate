@@ -14,7 +14,11 @@ class Masticate::Datify < Masticate::Base
 
   def crunch(row)
     if !@index
-      @index = row.index(@field) or raise "Unable to find column '#{@field}'"
+      if @field.is_a?(Fixnum) || @field =~ /^\d+/
+        @index = @field.to_i
+      else
+        @index = row.index(@field) or raise "Unable to find column '#{@field}'"
+      end
     elsif row
       ts = DateTime.strptime(row[@index], @format).to_time
       row[@index] = ts.to_i rescue nil

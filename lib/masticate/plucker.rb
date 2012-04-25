@@ -17,16 +17,15 @@ class Masticate::Plucker < Masticate::Base
       @headers = row
       @indexes = @fields.map do |f|
         case f
-        when String
-          row.index(f) or raise "Unable to find column '#{f}'"
-        when Fixnum
+        when Fixnum, /^\d+/
+          f = f.to_i
           if f > row.count
             raise "Cannot pluck column #{f}, there are only #{row.count} fields"
           else
             f-1
           end
         else
-          raise "Invalid field descriptor '#{f}'"
+          row.index(f) or raise "Unable to find column '#{f}'"
         end
       end
       @indexes.map {|i| row[i]}

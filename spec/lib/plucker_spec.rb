@@ -7,7 +7,7 @@ describe "plucker" do
   it "should pull named columns" do
     filename = File.dirname(__FILE__) + "/../data/namedcols.csv"
     tmp = Tempfile.new('plucker')
-    results = Masticate.pluck(filename, :output => tmp, :fields => ['three', 'five'])
+    results = Masticate.pluck(filename, :output => tmp, :fields => ['three', '5'])
     output = File.read(tmp)
     correct_output = File.read(File.dirname(__FILE__) + "/../data/namedcols.csv.output")
     tmp.unlink

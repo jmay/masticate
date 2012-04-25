@@ -1,5 +1,4 @@
-# extract subset of columns from CSV
-require "csv"
+# apply regex transformation to a field
 
 class Masticate::Gsubber < Masticate::Base
   def configure(opts)

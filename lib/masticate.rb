@@ -14,6 +14,8 @@ require_relative "masticate/gsubber"
 require_relative "masticate/max_rows"
 require_relative "masticate/concat"
 require_relative "masticate/relabel"
+require_relative "masticate/exclude"
+
 require_relative "masticate/cook"
 
 module Masticate
@@ -51,6 +53,10 @@ module Masticate
 
   def self.relabel(filename, opts)
     Relabel.new(filename).relabel(opts)
+  end
+
+  def self.exclude(filename, opts)
+    Exclude.new(filename).exclude(opts)
   end
 
   def self.cook(filename, opts)

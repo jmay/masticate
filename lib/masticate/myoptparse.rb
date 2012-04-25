@@ -85,7 +85,8 @@ class Masticate::MyOptionParser
       'datify' => Masticate::Datify,
       'maxrows' => Masticate::MaxRows,
       'relabel' => Masticate::Relabel,
-      'pluck' => Masticate::Plucker
+      'pluck' => Masticate::Plucker,
+      'exclude' => Masticate::Exclude
     }
 
     klass = klasses[command]
@@ -143,6 +144,10 @@ EOT
 
     when 'cook'
       results = Masticate.cook(filename, options)
+      logmessage(command, options, results)
+
+    when 'exclude'
+      results = Masticate.exclude(filename, options)
       logmessage(command, options, results)
 
     else
