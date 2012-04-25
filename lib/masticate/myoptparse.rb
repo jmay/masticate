@@ -37,6 +37,10 @@ class Masticate::MyOptionParser
         @options[:field] = f
       end
 
+      opts.on("--value VALUE", String, "(*exclude* only) Value to compare field to for exclusion") do |s|
+        @options[:value] = s
+      end
+
       opts.on("--snip DIRECTIVE", String, "Specify header fields to snip: first N, or by name") do |f|
         @options[:snip] = f.to_i
       end

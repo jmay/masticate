@@ -13,7 +13,10 @@ class Masticate::Csvify < Masticate::Base
     with_input do |input|
       while line = get
         row = CSV.parse_line(line, csv_options)
-        emit(row.to_csv) if row
+        if row
+          row = row.map(&:strip)
+          emit(row)
+        end
       end
     end
     @output.close if opts[:output]

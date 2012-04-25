@@ -6,7 +6,7 @@ class Masticate::Base
 
   def initialize(args)
     case args
-    when String
+    when String, nil
       @filename = args
     when Hash
       configure(args)
