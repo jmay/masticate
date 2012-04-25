@@ -6,11 +6,10 @@ class Masticate::Exclude < Masticate::Base
 
     @field = opts[:field] or raise "missing field to exclude"
     @value = opts[:value] or raise "missing value to exclude"
-  end
 
-  def set_headers(row)
-    @headers = row
-    @index = @headers.index(@field) or raise "Unable to find column '#{@field}' in headers"
+    # row-loading automatically strips leading & trailing whitespace and converts blanks to nils,
+    # so when looking for blanks need to compare to nil instead of ''
+    @value = nil if @value.empty?
   end
 
   def exclude(opts)
@@ -19,7 +18,8 @@ class Masticate::Exclude < Masticate::Base
 
   def crunch(row)
     if !@headers
-      set_headers(row)
+      @headers = row
+      @index = @headers.index(@field) or raise "Unable to find column '#{@field}' in headers"
       row
     elsif row
       if row[@index] == @value
