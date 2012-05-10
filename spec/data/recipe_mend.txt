@@ -1,0 +1,3 @@
+mend
+exclude --field 1 --value 'data2'
+pluck --fields 3

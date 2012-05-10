@@ -60,7 +60,14 @@ class Masticate::Base
     @output_count = 0
     with_input do |input|
       while line = get
-        row = CSV.parse_line(line, csv_options)
+        row = CSV.parse_line(line, csv_options) #.map {|s| s && s.strip}
+        if row
+          row = row.map {|s| s && s.strip}
+        end
+        # row2 = row.map {|s| s && s.strip}
+        # if row2.nil?
+        #   puts "**** ROW IS [#{row.inspect}]"
+        # end
         output = crunch(row)
         emit(output) if output
       end
@@ -70,7 +77,8 @@ class Masticate::Base
 
     {
       :input_count => input_count,
-      :output_count => @output_count
+      :output_count => @output_count,
+      :headers => @headers
     }
   end
 end

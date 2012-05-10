@@ -4,13 +4,77 @@
 # (due to a newline embedded in a field).  Glue those two lines into a single line in the output.
 
 class Masticate::Mender < Masticate::Base
-  attr_reader :col_sep
+  def configure(opts)
+    standard_options(opts)
 
-  def initialize(filename)
-    @filename = filename
+    @inlined = opts[:inlined]
+    @snip = opts[:snip]
+    @dejunk = opts[:dejunk]
+
+    @expected_field_count = nil
+    @holding = []
   end
 
+  # attr_reader :col_sep
+
+  # def initialize(filename)
+  #   @filename = filename
+  # end
+
   def mend(opts)
+    execute(opts)
+  end
+
+  def crunch(row)
+    if @inlined
+      if row
+        ncells = row.count/2-1
+        if !@headers
+          @headers = row[0..ncells]
+          @expected_field_count = @headers.count
+          emit(@headers)
+        else
+          if row[0..ncells] != @headers
+            raise "Header mismatch on line #{@input_count}\n  Expected: #{@headers.join(',')}\n     Found: #{row[0..ncells].join(',')}"
+          end
+        end
+        row = row[ncells+1, @expected_field_count]
+      end
+    elsif !@headers
+      # trust the first row
+      @headers = row
+      case @snip
+      when Fixnum
+        @headers.shift(@snip)
+      when String
+        raise "TODO: snip named header. Multiple?"
+      when nil
+        # do nothing
+      else
+        raise "Do not understand snip instruction [#{@snip.inspect}]"
+      end
+      @expected_field_count = @headers.count
+      row = @headers
+    elsif row
+      @holding += row
+      if @holding.count < @expected_field_count
+        # incomplete row; do not emit anything
+        row = nil
+      else
+        row = @holding
+        @holding = []
+      end
+
+      if @dejunk && row && row.select {|s| s && !s.strip.empty?}.count <= 2
+        # junky row, suppress output
+        nil
+      else
+        row
+      end
+    end
+  end
+
+  def old_mend(opts)
     @output = opts[:output] ? File.open(opts[:output], "w") : $stdout
     @col_sep = opts[:col_sep] || ','
     @quote_char = opts[:quote_char] || "\0"

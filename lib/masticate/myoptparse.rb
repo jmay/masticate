@@ -91,7 +91,8 @@ class Masticate::MyOptionParser
       'maxrows' => Masticate::MaxRows,
       'relabel' => Masticate::Relabel,
       'pluck' => Masticate::Plucker,
-      'exclude' => Masticate::Exclude
+      'exclude' => Masticate::Exclude,
+      'mend' => Masticate::Mender
     }
 
     klass = klasses[command]
@@ -165,6 +166,7 @@ EOT
 * masticate #{command} (#{options.keys.join(', ')})
   Lines in input: #{results[:input_count]}
   Lines in output: #{results[:output_count]}
+  Headers: #{results[:headers].inspect}
 EOT
     if results[:field_counts]
       $stderr.puts "  Field counts: #{results[:field_counts].inspect}"

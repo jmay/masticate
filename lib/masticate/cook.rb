@@ -19,7 +19,6 @@ class Masticate::Cook < Masticate::Base
     standard_options(opts)
 
     steps = recipe.map do |step|
-      # puts step
       argv = Shellwords.split(step)
       masticator = Masticate::MyOptionParser.new
       command, options = masticator.parse(argv)
