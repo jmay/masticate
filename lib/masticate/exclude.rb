@@ -19,7 +19,19 @@ class Masticate::Exclude < Masticate::Base
   def crunch(row)
     if !@headers
       @headers = row
-      @index = @headers.index(@field) or raise "Unable to find column '#{@field}' in headers"
+      f = @field
+      @index =
+        case f
+        when Fixnum, /^\d+$/
+          f = f.to_i
+          if f > row.count
+            raise "Cannot pluck column #{f}, there are only #{row.count} fields"
+          else
+            f-1
+          end
+        else
+          row.index(f) or raise "Unable to find column '#{f}' in headers"
+        end
       row
     elsif row
       if row[@index] == @value
