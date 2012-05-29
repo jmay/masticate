@@ -15,7 +15,7 @@ class Masticate::Concat #< Masticate::Base
     file1, *rest = @filenames
     system "cat #{file1} #{redirect}"
     rest.each do |file|
-      system "tail -n +2 #{file} #{redirect}"
+      system "tail -n +2 #{file} | sed '/^$/d' #{redirect}"
     end
   end
 end

@@ -12,7 +12,7 @@ describe "plucker" do
     correct_output = File.read(File.dirname(__FILE__) + "/../data/namedcols.csv.output")
     tmp.unlink
 
-    results[:input_count].should == 5
+    results[:input_count].should == 4
     output.should == correct_output
   end
 
@@ -24,7 +24,7 @@ describe "plucker" do
     correct_output = File.read(File.dirname(__FILE__) + "/../data/namedcols.csv.output")
     tmp.unlink
 
-    results[:input_count].should == 5
+    results[:input_count].should == 4
     output.should == correct_output
   end
 end

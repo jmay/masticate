@@ -25,8 +25,14 @@ class Masticate::Base
 
   def get
     line = @input.gets
-    @input_count += 1
-    line && line.chomp
+    return nil if line.nil?
+    line.chomp!
+    if line.empty?
+      get
+    else
+      @input_count += 1
+      line
+    end
   end
 
   def emit(line)

@@ -25,7 +25,8 @@ class Masticate::Sniffer < Masticate::Base
   def find_col_sep
     @delimstats = {}
     with_input do |input|
-      input.lines.take(10).each do |line|
+      lines = 10.times.map{get}.compact
+      lines.each do |line|
         @line1 = line unless @line1
 
         CandidateDelimiters.each do |delim|
@@ -67,8 +68,12 @@ class Masticate::Sniffer < Masticate::Base
   end
 
   def stats
+    counts = Hash.new(0)
     with_input do |input|
-      input.lines.each_with_object(Hash.new(0)) {|line, counts| counts[CSV.parse_line(line, :col_sep => col_sep, :quote_char => quote_char || "\0").count] += 1}
+      while line = get
+        counts[CSV.parse_line(line, :col_sep => col_sep, :quote_char => quote_char || "\0").count] += 1
+      end
     end
+    counts
   end
 end

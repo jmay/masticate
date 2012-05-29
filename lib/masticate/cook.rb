@@ -18,7 +18,8 @@ class Masticate::Cook < Masticate::Base
     recipe = File.read(recipefile).lines
     standard_options(opts)
 
-    steps = recipe.map do |step|
+    # ignore blank lines in recipe file
+    steps = recipe.grep(/\S/).map do |step|
       argv = Shellwords.split(step)
       masticator = Masticate::MyOptionParser.new
       command, options = masticator.parse(argv)
