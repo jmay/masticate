@@ -1,0 +1,6 @@
+exclude --field AuditCode --value '1'
+pluck --fields AuditByID,DTTM,AuditDesc
+datify --field DTTM --format "%m/%d/%Y %H:%M:%S%p"
+maxrows --by AuditByID --max DTTM
+gsub --field AuditByID --from ',|(.00$)' --to ''
+relabel --fields id,ts,desc

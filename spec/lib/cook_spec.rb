@@ -24,4 +24,15 @@ describe "cooking up a recipe" do
   
     output.should == correct_output
   end
+
+  it "should do correct datify & gsub in recipe" do
+    input = File.dirname(__FILE__) + "/../data/cookery_input.psv"
+    recipe = File.dirname(__FILE__) + "/../data/recipe_cookery.txt"
+    tmp = Tempfile.new('cooked')
+    results = Masticate.cook(input, :col_sep => '|', :output => tmp, :recipe => recipe)
+    output = File.read(tmp)
+    correct_output = File.read(File.dirname(__FILE__) + "/../data/cookery_result.csv")
+  
+    output.should == correct_output
+  end
 end

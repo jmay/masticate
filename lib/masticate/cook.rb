@@ -39,9 +39,16 @@ class Masticate::Cook < Masticate::Base
         emit(row) if row
       end
     end
+    more_rows = []
     steps.each do |step|
-      step.crunch(nil) {|row| emit(row)}
+      if more_rows.any?
+        more_rows = more_rows.map {|row| step.crunch(row)}
+      else
+        step.crunch(nil) {|row| more_rows << row}
+      end
     end
+    more_rows.each {|row| emit(row)}
+    # step.crunch(nil) {|row| emit(row)}
 
     @output.close if opts[:output]
 
