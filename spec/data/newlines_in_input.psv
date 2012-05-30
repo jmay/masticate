@@ -1,0 +1,8 @@
+LastName|FirstName|MiddleName|TitleName|AuditID|AuditByID|ChangeDTTM|AuditCode|AuditDescription|ObjectType|ReasonCodeID|ObjectID|AuthorizingName|DocumentID|DocumentAudTypeID|DocumentAudOrgID|DocumentAudComments|DocumentAudFileCount|DocumentAudIsInactiveFlag|PatientID|InternalExamID|PatientLast|PatientMiddle|PatientFirst
+Charles|Dingle|W|RIS Administrator|12345|1234|4/20/2012   2:54:26PM|MERGE|Merge Folders|DOCUMENT|0|999||888|38|2|Dropped 8 lb weight on foot.  c/o pain, swelling over 3rd, 4th metatarsals.  Possible non-displaced fractures of proximal 3rd and 4th metatarsals seen on one view.|0|N|888|777|WHIPPLE|D|ANNE
+Gomez|Bungle|||6|8|4/24/2012  10:31:53AM|MERGE|Merge Folders|DOCUMENT|0|101||505|38|2|broke little toe
+
+fracture prox phalanx, angulated (I reduced it but did not order a post reduction film.)
+
+sumner|0|N|499|172|SMITH|E|STEFANIE
+Gomez|Bangle|||59|8|3/28/2012   3:26:39PM|MERGE|Merge Folders|DOCUMENT|0|11||22|38|2|neg.|0|N|380|173|OCHS|JONES|CARL

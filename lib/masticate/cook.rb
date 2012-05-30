@@ -33,7 +33,13 @@ class Masticate::Cook < Masticate::Base
         row = CSV.parse_line(line, csv_options)
 
         steps.each do |step|
-          row = step.crunch(row) if row
+          if row
+            if step.class == Masticate::Mender
+              row = step.crunch(row, line, csv_options)
+            else
+              row = step.crunch(row)
+            end
+          end
         end
 
         emit(row) if row
@@ -48,7 +54,6 @@ class Masticate::Cook < Masticate::Base
       end
     end
     more_rows.each {|row| emit(row)}
-    # step.crunch(nil) {|row| emit(row)}
 
     @output.close if opts[:output]
 

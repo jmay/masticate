@@ -70,11 +70,11 @@ class Masticate::Base
         if row
           row = row.map {|s| s && s.strip}
         end
-        # row2 = row.map {|s| s && s.strip}
-        # if row2.nil?
-        #   puts "**** ROW IS [#{row.inspect}]"
-        # end
-        output = crunch(row)
+        if self.class == Masticate::Mender
+          output = crunch(row, line, csv_options)
+        else
+          output = crunch(row)
+        end
         emit(output) if output
       end
     end

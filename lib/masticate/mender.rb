@@ -12,20 +12,14 @@ class Masticate::Mender < Masticate::Base
     @dejunk = opts[:dejunk]
 
     @expected_field_count = nil
-    @holding = []
+    @holding = ''
   end
-
-  # attr_reader :col_sep
-
-  # def initialize(filename)
-  #   @filename = filename
-  # end
 
   def mend(opts)
     execute(opts)
   end
 
-  def crunch(row)
+  def crunch(row, line = '', csv_options = {})
     if @inlined
       if row
         ncells = row.count/2-1
@@ -56,13 +50,19 @@ class Masticate::Mender < Masticate::Base
       @expected_field_count = @headers.count
       row = @headers
     elsif row
-      @holding += row
-      if @holding.count < @expected_field_count
+      @holding << ' ' unless @holding.empty?
+      @holding << line
+
+      row = CSV.parse_line(@holding, csv_options) #.map {|s| s && s.strip}
+      if row
+        row = row.map {|s| s && s.strip}
+      end
+
+      if row.count < @expected_field_count
         # incomplete row; do not emit anything
         row = nil
       else
-        row = @holding
-        @holding = []
+        @holding = ''
       end
 
       if @dejunk && row && row.select {|s| s && !s.strip.empty?}.count <= 2
@@ -72,78 +72,6 @@ class Masticate::Mender < Masticate::Base
         row
       end
     end
-  end
-
-  def old_mend(opts)
-    @output = opts[:output] ? File.open(opts[:output], "w") : $stdout
-    @col_sep = opts[:col_sep] || ','
-    @quote_char = opts[:quote_char] || "\0"
-
-    expected_field_count = nil
-    headers = nil
-    @output_count = 0
-    fieldcounts = Hash.new(0)
-    with_input do |input|
-      while (line = get) do
-        unless line =~ /^\s*$/
-          if opts[:inlined]
-            row = explode(line)
-            ncells = row.count/2-1
-            if !expected_field_count
-              headers = row[0..ncells]
-              expected_field_count = headers.count
-              fieldcounts[headers.count] += 1
-              emit(headers.to_csv(:col_sep => @col_sep))
-            else
-              if row[0..ncells] != headers
-                raise "Header mismatch on line #{@input_count}\n  Expected: #{headers.join(',')}\n     Found: #{row[0..ncells].join(',')}"
-              end
-            end
-            row = row[ncells+1, expected_field_count]
-            fieldcounts[row.count] += 1
-            emit(row.to_csv(:col_sep => @col_sep))
-          elsif !expected_field_count
-            # trust the first row
-            headers = explode(line).map(&:strip)
-            case opts[:snip]
-            when Fixnum
-              headers.shift(opts[:snip])
-            when String
-              raise "TODO: snip named header. Multiple?"
-            when nil
-              # do nothing
-            else
-              raise "Do not understand snip instruction [#{opts[:snip].inspect}]"
-            end
-            expected_field_count = headers.count
-            fieldcounts[headers.count] += 1
-            emit(headers.to_csv(:col_sep => @col_sep))
-          else
-            running_count = fieldcount(line)
-            while !input.eof? && running_count < expected_field_count do
-              nextbit = get
-              if nextbit
-                line = line + ' ' + nextbit
-                running_count = fieldcount(line)
-              end
-            end
-
-            unless opts[:dejunk] && junky?(line)
-              fieldcounts[fieldcount(line)] += 1
-              emit(line)
-            end
-          end
-        end
-      end
-    end
-
-    @output.close if opts[:output]
-    {
-      :input_count => @input_count,
-      :output_count => @output_count,
-      :field_counts => fieldcounts,
-      :headers => headers
-    }
   end
 
   def fieldcount(line)

@@ -39,4 +39,16 @@ describe "mending" do
     # results[:field_counts].should == {11 => 11}
     output.should == correct_output
   end
+
+  it "should consolidate fields with embedded newlines" do
+    filename = File.dirname(__FILE__) + "/../data/newlines_in_input.psv"
+    tmp = Tempfile.new('mending')
+    results = Masticate.mend(filename, :col_sep => '|', :output => tmp)
+    output = File.read(tmp)
+    correct_output = File.read(File.dirname(__FILE__) + "/../data/newlines_merged.csv")
+
+    results[:input_count].should == 6
+    results[:output_count].should == 4
+    output.should == correct_output
+  end
 end
