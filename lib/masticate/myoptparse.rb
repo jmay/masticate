@@ -74,6 +74,10 @@ class Masticate::MyOptionParser
       opts.on("--recipe FILENAME", String, "(*cook* only) Recipe file") do |f|
         @options[:recipe] = f
       end
+
+      opts.on("--rule {downcase,upcase}", String, "(*transform* only) Transformation rule") do |f|
+        @options[:rule] = f
+      end
     end
   end
 
@@ -87,6 +91,7 @@ class Masticate::MyOptionParser
   def prepare(command, options)
     klasses = {
       'gsub' => Masticate::Gsubber,
+      'transform' => Masticate::Transform,
       'datify' => Masticate::Datify,
       'maxrows' => Masticate::MaxRows,
       'relabel' => Masticate::Relabel,
@@ -154,6 +159,10 @@ EOT
 
     when 'exclude'
       results = Masticate.exclude(filename, options)
+      logmessage(command, options, results)
+
+    when 'transform'
+      results = Masticate.transform(filename, options)
       logmessage(command, options, results)
 
     else

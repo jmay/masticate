@@ -15,6 +15,7 @@ require_relative "masticate/max_rows"
 require_relative "masticate/concat"
 require_relative "masticate/relabel"
 require_relative "masticate/exclude"
+require_relative "masticate/transform"
 
 require_relative "masticate/cook"
 
@@ -61,5 +62,9 @@ module Masticate
 
   def self.cook(filename, opts)
     Cook.new(filename).cook(opts)
+  end
+
+  def self.transform(filename, opts)
+    Transform.new(filename).transform(opts)
   end
 end
