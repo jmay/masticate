@@ -78,6 +78,10 @@ class Masticate::MyOptionParser
       opts.on("--rule {downcase,upcase}", String, "(*transform* only) Transformation rule") do |f|
         @options[:rule] = f
       end
+
+      opts.on("--buried FIELD", String, "(*mend* only) Remove embedded delimiters from named field") do |f|
+        @options[:buried] = f
+      end
     end
   end
 
