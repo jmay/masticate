@@ -1,0 +1,4 @@
+LastName|FirstName|Comment|ID|Date
+Washington|George|text without embedded pipes|111|3/13/2012
+Adams|John|text with|embedded pipe|222|4/14/2012
+Jefferson|Thomas|text with no embedded pipe|333|5/15/2012

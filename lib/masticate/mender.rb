@@ -10,6 +10,7 @@ class Masticate::Mender < Masticate::Base
     @inlined = opts[:inlined]
     @snip = opts[:snip]
     @dejunk = opts[:dejunk]
+    @buried = opts[:buried]
 
     @expected_field_count = nil
     @holding = ''
@@ -47,6 +48,15 @@ class Masticate::Mender < Masticate::Base
       else
         raise "Do not understand snip instruction [#{@snip.inspect}]"
       end
+
+      if @buried
+        if @buried.is_a?(Fixnum) || @buried =~ /^\d+/
+          @buried_index = @buried.to_i
+        else
+          @buried_index = row.index(@buried) or raise "Unable to find column '#{@buried}'"
+        end
+      end
+
       @expected_field_count = @headers.count
       row = @headers
     elsif row
@@ -63,6 +73,12 @@ class Masticate::Mender < Masticate::Base
         row = nil
       else
         @holding = ''
+      end
+
+      if @buried && (row.count > @expected_field_count)
+        # buried delimiter
+        # take the N+1th field and merge it onto the Nth field, moving up the remaining fields
+        row[@buried_index] += row.delete_at(@buried_index + 1)
       end
 
       if @dejunk && row && row.select {|s| s && !s.strip.empty?}.count <= 2

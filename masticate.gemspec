@@ -16,8 +16,8 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Masticate::VERSION
 
-  gem.add_development_dependency "rake", "~> 0.9.2"
-  gem.add_development_dependency "rspec", "~> 2.9.0"
-  gem.add_development_dependency "guard-rspec", "~> 0.7.0"
-  gem.add_development_dependency "ruby_gntp", "~> 0.3.4"
+  gem.add_development_dependency "rake"
+  gem.add_development_dependency "rspec"
+  gem.add_development_dependency "guard-rspec"
+  gem.add_development_dependency "ruby_gntp"
 end

@@ -51,4 +51,16 @@ describe "mending" do
     results[:output_count].should == 4
     output.should == correct_output
   end
+
+  it "should consolidate fields with embedded delimiters" do
+    filename = File.dirname(__FILE__) + "/../data/buried_delims_in_input.psv"
+    tmp = Tempfile.new('mending')
+    results = Masticate.mend(filename, :col_sep => '|', :buried => 'Comment', :output => tmp)
+    output = File.read(tmp)
+    correct_output = File.read(File.dirname(__FILE__) + "/../data/delims_untangled.csv")
+
+    results[:input_count].should == 4
+    results[:output_count].should == 4
+    output.should == correct_output
+  end
 end
