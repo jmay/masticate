@@ -165,6 +165,10 @@ EOT
       results = Masticate.exclude(filename, options)
       logmessage(command, options, results)
 
+    when 'include'
+      results = Masticate.include(filename, options)
+      logmessage(command, options, results)
+
     when 'transform'
       results = Masticate.transform(filename, options)
       logmessage(command, options, results)

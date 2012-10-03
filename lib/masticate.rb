@@ -1,23 +1,9 @@
 require "open-uri"
 require "csv"
 
-require_relative "masticate/version"
-require_relative "masticate/base"
-require_relative "masticate/myoptparse"
-
-require_relative "masticate/sniffer"
-require_relative "masticate/mender"
-require_relative "masticate/csvify"
-require_relative "masticate/plucker"
-require_relative "masticate/datify"
-require_relative "masticate/gsubber"
-require_relative "masticate/max_rows"
-require_relative "masticate/concat"
-require_relative "masticate/relabel"
-require_relative "masticate/exclude"
-require_relative "masticate/transform"
-
-require_relative "masticate/cook"
+%w{version base myoptparse sniffer mender csvify plucker datify gsubber max_rows concat relabel exclude transform include cook}.each do |f|
+  require_relative "masticate/#{f}"
+end
 
 module Masticate
   def self.sniff(filename, opts = {})
@@ -58,6 +44,10 @@ module Masticate
 
   def self.exclude(filename, opts)
     Exclude.new(filename).exclude(opts)
+  end
+
+  def self.include(filename, opts)
+    Include.new(filename).exclude(opts)
   end
 
   def self.cook(filename, opts)
