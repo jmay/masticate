@@ -101,6 +101,7 @@ class Masticate::MyOptionParser
       'relabel' => Masticate::Relabel,
       'pluck' => Masticate::Plucker,
       'exclude' => Masticate::Exclude,
+      'include' => Masticate::Include,
       'mend' => Masticate::Mender
     }
 
