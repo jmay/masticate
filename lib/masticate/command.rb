@@ -12,6 +12,12 @@ class Masticate::Command < Thor
       opts
     end
 
+    def execute(filename = nil)
+      method = caller[0][/`.*'/][1..-2]
+      results = Masticate.send(method, filename, params)
+      logmessage(method, params, results)
+    end
+
     def logmessage(command, options, results)
       $stderr.puts <<-EOT
   * masticate #{command} (#{options.keys.join(', ')})
@@ -57,8 +63,7 @@ EOT
   method_option :delim, :desc => "field delimiter (default is comma)"
   method_option :quote, :desc => "delimiter escape string (default is double-quotes when delim is comma, otherwise none)"
   def csvify(filename = nil)
-    results = Masticate.csvify(filename, params)
-    logmessage(__method__, params, results)
+    execute(filename)
   end
 
   desc 'pluck', "ignore all but the specified columns"
@@ -66,8 +71,7 @@ EOT
   method_option :quote, :desc => "delimiter escape string (default is double-quotes when delim is comma, otherwise none)"
   method_option :fields, :required => true, :desc => "field names to extract"
   def pluck(filename = nil)
-    results = Masticate.pluck(filename, params)
-    logmessage(__method__, params, results)
+    execute(filename)
   end
 
   desc "datify", "parsed named field as formatted time/datestamp"
@@ -76,8 +80,7 @@ EOT
   method_option :field, :required => true, :desc => "Fieldname to interpret as a date/time"
   method_option :format, :required => true, :desc => "strptime format string"
   def datify(filename = nil)
-    results = Masticate.datify(filename, params)
-    logmessage(__method__, params, results)
+    execute(filename)
   end
 
   desc "gsub", "applied substitution rule to named field"
@@ -87,8 +90,7 @@ EOT
   method_option :from, :required => true, :desc => "regexp to apply to original value"
   method_option :to, :required => true, :desc => "string to replace capture with"
   def gsub(filename = nil)
-    results = Masticate.gsub(filename, params)
-    logmessage(__method__, params, results)
+    execute(filename)
   end
 
   desc "maxrows", "compute SUM(max-field) GROUP BY(by-field)"
@@ -97,16 +99,14 @@ EOT
   method_option :max, :required => true, :desc => "field to sum"
   method_option :by, :required => true, :desc => "field to aggregate over"
   def maxrows(filename = nil)
-    results = Masticate.maxrows(filename, params)
-    logmessage(__method__, params, results)
+    execute(filename)
   end
 
   desc "concat", "concatenate multiple input files, ignoring header lines on all but first file"
   method_option :delim, :desc => "field delimiter (default is comma)"
   method_option :quote, :desc => "delimiter escape string (default is double-quotes when delim is comma, otherwise none)"
-  def concat(filename = nil)
-    results = Masticate.concat(ARGV, options)
-    # logmessage(__method__, params, results)
+  def concat(*args)
+    Masticate.concat(args, params)
   end
 
   desc "relabel", "replace header line in output"
@@ -114,8 +114,7 @@ EOT
   method_option :quote, :desc => "delimiter escape string (default is double-quotes when delim is comma, otherwise none)"
   method_option :fields, :required => true, :desc => "list of field names to use in output"
   def relabel(filename = nil)
-    results = Masticate.relabel(filename, params)
-    # logmessage(__method__, params, results)
+    Masticate.relabel(filename, params)
   end
 
   desc "exclude", "ignore input lines that match criteria"
@@ -124,8 +123,7 @@ EOT
   method_option :field, :required => true, :desc => "field to check for exclusion"
   method_option :value, :required => true, :desc => "value to compare with for exclusion"
   def exclude(filename = nil)
-    results = Masticate.exclude(filename, params)
-    logmessage(__method__, params, results)
+    execute(filename)
   end
 
   desc "include", "ignore all input lines *except* those that match criteria"
@@ -134,8 +132,7 @@ EOT
   method_option :field, :required => true, :desc => "field to check for inclusion"
   method_option :value, :required => true, :desc => "value to compare with for inclusion"
   def include(filename = nil)
-    results = Masticate.include(filename, params)
-    logmessage(__method__, params, results)
+    execute(filename)
   end
 
   desc "transform", "apply transformation rule to named field"
@@ -143,8 +140,7 @@ EOT
   method_option :quote, :desc => "delimiter escape string (default is double-quotes when delim is comma, otherwise none)"
   method_option :rule, :required => true, :desc => "valid values are {upcase, downcase}"
   def transform(filename = nil)
-    results = Masticate.transform(filename, params)
-    logmessage(__method__, params, results)
+    execute(filename)
   end
 
   desc "cook", "apply conversion recipe to input records"
@@ -152,7 +148,6 @@ EOT
   method_option :quote, :desc => "delimiter escape string (default is double-quotes when delim is comma, otherwise none)"
   method_option :recipe, :required => true, :desc => "filename containing recipe"
   def cook(filename = nil)
-    results = Masticate.cook(filename, params)
-    logmessage(__method__, params, results)
+    execute(filename)
   end
 end
