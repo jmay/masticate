@@ -1,7 +1,7 @@
 require "open-uri"
 require "csv"
 
-%w{version base myoptparse sniffer mender csvify plucker datify gsubber max_rows concat relabel exclude transform include cook}.each do |f|
+%w{version base sniffer mender csvify plucker datify gsubber max_rows concat relabel exclude transform include cook command}.each do |f|
   require_relative "masticate/#{f}"
 end
 

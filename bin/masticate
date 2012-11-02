@@ -2,7 +2,4 @@
 
 require_relative "../lib/masticate"
 
-masticator = Masticate::MyOptionParser.new
-command, options, filenames = masticator.parse
-
-masticator.execute(command, options, filenames)
+Masticate::Command.start
