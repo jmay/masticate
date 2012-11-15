@@ -7,7 +7,7 @@ class Masticate::Command < Thor
     def params
       opts = options.dup
       col_sep = opts[:delim]
-      col_sep = "TAB" if col_sep == "\t"
+      col_sep = "\t" if col_sep == "TAB"
       opts[:col_sep] = col_sep
       opts
     end
