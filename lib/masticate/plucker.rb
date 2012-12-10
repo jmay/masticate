@@ -6,6 +6,9 @@ class Masticate::Plucker < Masticate::Base
     standard_options(opts)
 
     @fields = opts[:fields] or raise "missing fields to pluck"
+    if @fields.is_a?(String)
+      @fields = @fields.split(/,\s*/)
+    end
   end
 
   def pluck(opts)
